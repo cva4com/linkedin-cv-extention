@@ -1,0 +1,35 @@
+{
+  "name": "LinkedIn™ Profile to CV",
+  "description": "Export LinkedIn™ Profile to PDF CV or Resume",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "icons": {
+    "16": "static/images/icon16.png",
+    "32": "static/images/icon32.png",
+    "48": "static/images/icon48.png",
+    "128": "static/images/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "MacCtrl+Shift+Y"
+      },
+      "description": "Activate the extension"
+    },
+    "export": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "mac": "MacCtrl+Shift+E"
+      },
+      "description": "Export LinkedIn to CV"
+    }
+  }
+}
