@@ -24,7 +24,7 @@
       },
       "description": "Activate the extension"
     },
-    "export": {
+    "export_cv": {
       "suggested_key": {
         "default": "Ctrl+Shift+E",
         "mac": "MacCtrl+Shift+E"

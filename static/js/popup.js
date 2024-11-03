@@ -1,22 +1,20 @@
-function getPDF() {
+function getPDF(info) {
 	const { jsPDF } = window.jspdf;
-	var x0 = 10;
-	var x1 = 12;
-	var x2 = 17;
-	var y = 30;
 	var doc = new jsPDF({
 		orientation: "portrait",
 		format: "letter",
 	});
+	const center = doc.internal.pageSize.width / 2;
+	var x0 = 10;
+	var x1 = 12;
+	var x2 = 17;
+	var y = 17;
 	doc.addFont('../static/fonts/Carlito-Bold.ttf', 'CarlitoBold', 'bold');
 
 	doc.setFont("CarlitoBold", "bold");
 	doc.setTextColor(100, 140, 144);
-	doc.setFontSize(22);
-	doc.text("CHRONOLOGICAL RESUME", 66, 17);
-
-	doc.setFontSize(13);
-	doc.text("PROFESSIONAL EXPERIENCE", x1, 50);
+	doc.setFontSize(16);
+	doc.text(info.header + " - " + info.title, center, y, {align: 'center', maxWidth: 186});
 
 	doc.setLineWidth(1.0);
 	doc.setDrawColor(100, 140, 144);
@@ -26,10 +24,10 @@ function getPDF() {
 	doc.setTextColor(0, 0, 0);
 
 	doc.setFont("helvetica", "italic");
-	const intro = "Financial Advisor with 7+ years of experience delivering financial/investment advisory services to high value clients. Proven success in managing multi-million dollar portfolios, driving profitability, and increasing ROI through skillful strategic planning, consulting, and financial advisory services.";
-	doc.text(intro, x1, y, { maxWidth: 186 });
+	y += 13;
+	doc.text(info.summary, x1, y, { maxWidth: 186 });
 
-	let lines = Math.ceil(intro.length / 110);
+	let lines = Math.ceil(info.summary.length / 110);
 	y += (lines + 1) * 5;
 
 	doc.line(x0, y - 4, x0, y + 1);
@@ -43,38 +41,16 @@ function getPDF() {
 	doc.setTextColor(0, 0, 0);
 
 	y += 3;
-	y = setExperience(doc, x1, x2, y, "helvetica",
-		"WELLS FARGO ADVISORS, Houston, TX",
-		"Senior Financial Advisor",
-		"August 2020 – Present",
-		[
-			"Deliver financial advice to clients, proposing strategies to achieve short- and long-term objectives for investments, insurance, business and estate planning with minimal risk",
-			"Develop, review, and optimize investment portfolios for 300+ high value clients with over $190M AUM (Assets Under Management)",
-			"Ensure maximum client satisfaction by providing exceptional and personalized service, enhancing client satisfaction ratings from 88% to 99.9% in less than 6 months",
-			"Work closely with specialists from multiple branches, managing investment portfolios for over 800 clients with over $25M in assets under care"
-		]
-	);
 
-	y = setExperience(doc, x1, x2, y, "helvetica",
-		"SUNTRUST INVESTMENT SERVICES, INC., New Orleans, LA",
-		"Financial Advisor",
-		"July 2017 – August 2020",
-		[
-			"Served as knowledgeable financial advisor to clients, managing an over $20.75M investment portfolio of 90+ individual and corporate clients",
-			"Devised and applied a new training and accountability program that increased productivity from #10 to #3 in the region in less than 2 year period",
-			"Partnered with cross-functional teams in consulting with clients to provide asset management risk strategy and mitigation, which increased AUM by 50%"
-		]
-	);
-
-	y = setExperience(doc, x1, x2, y, "helvetica",
-		"MAVERICK CAPITAL MANAGEMENT, New Orleans, LA",
-		"Financial Advisor",
-		"July 2014 – August 2017",
-		[
-			"Served as the primary point of contact for over 15 clients",
-			"Managed the portfolios of several major clients with over $8.5M in total assets"
-		]
-	);
+	for (let i = 0; i < info.experience.length; i++) {
+		if (i > 5) break;
+		y = setExperience(doc, x1, x2, y, "helvetica",
+			info.experience[i].company,
+			info.experience[i].position,
+			info.experience[i].period,
+			info.experience[i].achievements
+		);
+	}
 
 	y += 6;
 	doc.line(x0, y - 5, 10, y + 1);
@@ -91,31 +67,36 @@ function getPDF() {
 
 	let yedu = y + 9;
 	doc.setFont("helvetica", "italic");
-	doc.text("May 2014", x1, yedu);
+	doc.text(info.education[0].years, x1, yedu);
 
 	yedu += 8;
 	doc.setFont("helvetica", "bold");
-	doc.text("LOUISIANA STATE UNIVERSITY, Baton Rouge, LA", x1, yedu);
+	doc.text(info.education[0].school, x1, yedu);
 
 	doc.setFont("helvetica", "normal");
 	yedu += 5;
-	let edu = "Bachelor of Science in Business Administration (concentration: finance), Honors: cum laude (GPA: 3.7/4.0)";
+	let edu = info.education[0].degree;
 	doc.text(edu, x1, yedu, { maxWidth: 90 });
 
-	
 	let yskill = y + 9;
-	let skill = "•    Proficient in MS Office (Word, Excel, PowerPoint) Outlook, MS Project, Salesforce, TFS Project Management, Webex";
-	doc.text(skill, 110, yskill, { maxWidth: 90 });
+	let skills = "";
+	if (info.skills && info.skills.length > 0) {
+		skills = "•		" + info.skills.join(', ');
+	}
+	doc.text(skills, 110, yskill, { maxWidth: 90 });
 
-	lines = Math.ceil(skill.length / 110);
-	yskill += lines * 5 + 7;
-	skill = "•    Fluent in English, Spanish, and French";
-	doc.text(skill, 110, yskill, { maxWidth: 90 });
+	lines = Math.ceil(skills.length / 110);
+	yskill += lines * 5 + 1;
+	let languages = "";
+	if (info.languages && info.languages.length > 0) {
+		languages = "•		" + info.languages.join(', ');
+	}
+	doc.text(languages, 110, yskill, { maxWidth: 90 });
 
 	lines = Math.ceil(edu.length / 43);
 	yedu += lines * 4;
 
-	lines = Math.ceil(skill.length / 43);
+	lines = Math.ceil(languages.length / 43);
 	yskill += lines * 5;
 	if (yedu > yskill) {
 		y = yedu + 2;
@@ -125,9 +106,9 @@ function getPDF() {
 	doc.line(x0, y, 207, y);
 
 	y += 7;
-	doc.text("3665 Margaret Street, Houston, TX 47587 • RichardWilliams@gmail.com • (770) 625-9669", doc.internal.pageSize.width/2, y, {align: 'center'});
+	doc.text(info.contact, center, y, {align: 'center'});
 
-	doc.save('Letters.pdf');
+	doc.save(`CV_${info.header}.pdf`);
 }
 
 /**
@@ -166,7 +147,7 @@ function setExperience(doc, x1, x2, y, font, company, position, period, achievem
 			if (i == 0) {
 				y += 5;
 			}
-			achievement = "•    " + achievements[i];
+			achievement = "•	" + achievements[i];
 			doc.text(achievement, x2, y, { maxWidth: 186 });
 			if (achievement.length > 0) {
 				let lines = Math.ceil(achievement.length / 110);
@@ -178,4 +159,50 @@ function setExperience(doc, x1, x2, y, font, company, position, period, achievem
 	return y;
 }
 
-document.getElementById("export").addEventListener("click", getPDF);
+const exportButton = document.getElementById("export");
+
+const getActiveTab = () => new Promise(resolve => {
+	chrome.tabs.query({ active: true, currentWindow: true }, tabs => resolve(tabs[0]));
+});
+
+const executeScript = (tabId, file) => {
+	chrome.scripting.executeScript({
+		target: { tabId },
+		files: [file],
+	})
+	.then(() => console.log("Injected the content script."))
+	.catch(err => console.error(err));
+};
+
+const handleButtonClick = (button, file) => {
+	if (button.disabled) return;
+	getActiveTab().then(tab => executeScript(tab.id, file));
+};
+
+exportButton.addEventListener("click", () => handleButtonClick(exportButton, "./static/js/export.js"));
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	if (request.type === "export") {
+		navigator.clipboard.writeText(request.text)
+			.then(() => {
+				const hasStatus = document.getElementById("status");
+				if (hasStatus) hasStatus.remove();
+				const textElement = document.createElement("p");
+				textElement.id = "status";
+				textElement.textContent = `The CSV file is downloaded. ${JSON.stringify(request.info)}.`;
+				document.getElementById("export").insertAdjacentElement("afterend", textElement);
+				getPDF(request.info);
+			})
+			.catch(err => console.error("Could not get data: ", err));
+	}
+});
+
+chrome.commands.onCommand.addListener(command => {
+	if (command === "export_cv") handleButtonClick(exportButton, "./static/js/export.js");
+});
+
+getActiveTab().then(tab => {
+	const url = tab.url;
+	const linkedinRegex = /^https?:\/\/(www\.)?linkedin\.com\/in\/[\w\-\_]+\/?$/;
+	exportButton.disabled = !linkedinRegex.test(url);
+});
