@@ -29,8 +29,11 @@ function getPDF(info) {
 
 	let lines = Math.ceil(info.summary.length / 110);
 	y += (lines + 1) * 5;
-
-	doc.line(x0, y - 4, x0, y + 1);
+	let linebreak = info.summary.split(/\r\n|\r|\n/).length;
+	if (linebreak >= 2) {
+		y += (linebreak - 1) * 5;
+	}
+	doc.line(x0, y - 4, x0, y);
 
 	doc.setFont("CarlitoBold", "bold");
 	doc.setTextColor(100, 140, 144);
@@ -50,6 +53,10 @@ function getPDF(info) {
 			info.experience[i].period,
 			info.experience[i].achievements
 		);
+		if (i == info.experience.length-1 && info.experience[i].achievements.length == 0)
+		{
+			y += 6;
+		}
 	}
 
 	y += 6;
@@ -81,7 +88,7 @@ function getPDF(info) {
 	let yskill = y + 9;
 	let skills = "";
 	if (info.skills && info.skills.length > 0) {
-		skills = "•		" + info.skills.join(', ');
+		skills = "•	" + info.skills.join(', ');
 	}
 	doc.text(skills, 110, yskill, { maxWidth: 90 });
 
@@ -89,7 +96,7 @@ function getPDF(info) {
 	yskill += lines * 5 + 1;
 	let languages = "";
 	if (info.languages && info.languages.length > 0) {
-		languages = "•		" + info.languages.join(', ');
+		languages = "•	" + info.languages.join(', ');
 	}
 	doc.text(languages, 110, yskill, { maxWidth: 90 });
 
@@ -144,13 +151,14 @@ function setExperience(doc, x1, x2, y, font, company, position, period, achievem
 	if (achievements != undefined && achievements.length > 0) {
 		let achievement = "";
 		for (let i = 0; i < achievements.length; i++) {
+			if (achievements[i].length == 0)continue;
 			if (i == 0) {
 				y += 5;
 			}
 			achievement = "•	" + achievements[i];
 			doc.text(achievement, x2, y, { maxWidth: 186 });
 			if (achievement.length > 0) {
-				let lines = Math.ceil(achievement.length / 110);
+				let lines = Math.ceil(achievement.length / 90);
 				y += lines * 5 + lineoffset;
 			}
 		}
@@ -189,7 +197,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 				if (hasStatus) hasStatus.remove();
 				const textElement = document.createElement("p");
 				textElement.id = "status";
-				textElement.textContent = `The CSV file is downloaded. ${JSON.stringify(request.info)}.`;
+				textElement.textContent = `The CV pdf file has been downloaded.`;
 				document.getElementById("export").insertAdjacentElement("afterend", textElement);
 				getPDF(request.info);
 			})

@@ -67,6 +67,11 @@
 				section_index++;
 			}
 
+			let services = document.getElementById('services');
+			if (services != null && sections.length > section_index) {
+				section_index++;
+			}
+
 			let contents = document.getElementById('content_collections');
 			if (contents != null && sections.length > section_index) {
 				section_index++;
@@ -77,7 +82,10 @@
 			if (experience_null == null && experiences != null && sections.length > section_index) {
 				const experiences_sections = sections[section_index];
 				const experience_list = experiences_sections.getElementsByTagName("ul")[0];
-				const items = experience_list.getElementsByTagName('li');
+				let items = [];
+				if (experience_list) {
+					items = experience_list.getElementsByTagName('li');
+				}
 				let index = 0;
 				for(let i = 0; i < items.length; i++) {
 
@@ -219,7 +227,6 @@
 					index++;
 				}
 			}
-			// data.experience.reverse();
 			section_index++;
 
 			let educations = document.getElementById('education');
@@ -249,11 +256,10 @@
 			if (skill_null == null && skills != null && sections.length > section_index) {
 				let skills_sections = sections[section_index];
 				let skill = skills_sections.querySelectorAll('[aria-hidden="true"]');
-				if (skill && skill.length > 2) {
-					data.skills.push(skill[2].innerText);
-				}
-				if (skill && skill.length > 4) {
-					data.skills.push(skill[4].innerText);
+				for (let j = 0; j < skill.length; j++) {
+					if (skill[j].nodeName == "DIV" && skill.length > j+1 && skill[j+1].nodeName == "SPAN") {
+						data.skills.push(skill[j+1].innerText);
+					}
 				}
 			}
 			section_index++;
