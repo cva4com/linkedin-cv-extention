@@ -1,8 +1,13 @@
 {
   "name": "LinkedIn™ Profile to CV",
   "description": "Export LinkedIn™ Profile to PDF CV or Resume",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "manifest_version": 3,
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{ccc69b00-3d9b-4458-b34d-187b0041386d}"
+    }
+  },
   "icons": {
     "16": "static/images/icon16.png",
     "32": "static/images/icon32.png",

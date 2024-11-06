@@ -9,7 +9,7 @@ function getPDF(info) {
 	var x1 = 12;
 	var x2 = 17;
 	var y = 17;
-	doc.addFont('../static/fonts/Carlito-Bold.ttf', 'CarlitoBold', 'bold');
+	doc.addFont('/static/fonts/Carlito-Bold.ttf', 'CarlitoBold', 'bold');
 
 	doc.setFont("CarlitoBold", "bold");
 	doc.setTextColor(100, 140, 144);
@@ -187,7 +187,7 @@ const handleButtonClick = (button, file) => {
 	getActiveTab().then(tab => executeScript(tab.id, file));
 };
 
-exportButton.addEventListener("click", () => handleButtonClick(exportButton, "./static/js/export.js"));
+exportButton.addEventListener("click", () => handleButtonClick(exportButton, "/static/js/export.js"));
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	if (request.type === "export") {
@@ -206,7 +206,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 chrome.commands.onCommand.addListener(command => {
-	if (command === "export_cv") handleButtonClick(exportButton, "./static/js/export.js");
+	if (command === "export_cv") handleButtonClick(exportButton, "/static/js/export.js");
 });
 
 getActiveTab().then(tab => {

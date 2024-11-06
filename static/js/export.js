@@ -51,6 +51,11 @@
 				section_index++;
 			}
 
+			let resources = document.getElementById('resources');
+			if (resources != null && sections.length > section_index) {
+				section_index++;
+			}
+
 			let highlights = document.getElementById('highlights');
 			if (highlights != null && sections.length > section_index) {
 				section_index++;
