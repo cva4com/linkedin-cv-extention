@@ -14,7 +14,11 @@ function getPDF(info) {
 	doc.setFont("CarlitoBold", "bold");
 	doc.setTextColor(100, 140, 144);
 	doc.setFontSize(16);
-	doc.text(info.header + " - " + info.title, center, y, {align: 'center', maxWidth: 186});
+	if (info.summary.length === 0) {
+		doc.text(info.header, center, y, {align: 'center', maxWidth: 186});
+	} else {
+		doc.text(info.header + " - " + info.title, center, y, {align: 'center', maxWidth: 186});
+	}
 
 	doc.setLineWidth(1.0);
 	doc.setDrawColor(100, 140, 144);
@@ -25,13 +29,23 @@ function getPDF(info) {
 
 	doc.setFont("helvetica", "italic");
 	y += 13;
-	doc.text(info.summary, x1, y, { maxWidth: 186 });
+	if (info.summary.length === 0) {
+		doc.text(info.title, x1, y, { align: "left", maxWidth: 186 });
+	} else {
+		doc.text(info.summary, x1, y, { align: "left", maxWidth: 186 });
+	}
 
 	let lines = Math.ceil(info.summary.length / 110);
-	y += (lines + 1) * 5;
 	let linebreak = info.summary.split(/\r\n|\r|\n/).length;
-	if (linebreak >= 2) {
-		y += (linebreak - 1) * 5;
+	if (lines > linebreak) {
+		y += (lines + 1) * 5;
+		if (linebreak >= 2) {
+			y += (linebreak - 1) * 5;
+		} else {
+			y += 3;
+		}
+	} else {
+		y += linebreak * 5 + 3;
 	}
 	doc.line(x0, y - 4, x0, y);
 

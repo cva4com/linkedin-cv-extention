@@ -6,7 +6,7 @@
 				"header": "Mr. Smith",
 				"title": "",
 				"contact": "",
-				"summary": "Lorem ipsum dolor sit amet",
+				"summary": "",
 				"experience": [],
 				"education": [
 					{
@@ -19,17 +19,10 @@
 				"languages": []
 			};
 
-			const sections = document.querySelectorAll("section.artdeco-card");
-			let section_index = 0;
-			
 			let profiles = document.getElementById('profile-sticky-header-toggle');
-			
-			if (profiles != null && sections.length > section_index) {
-				let profiles_sections = sections[section_index];
+			if (profiles != null && profiles.parentElement.nodeName == "SECTION") {
+				let profiles_sections = profiles.parentElement;
 				let header = profiles_sections.querySelectorAll(".t-24")[0];
-				/*if (!header) {
-					header = document.getElementsByClassName("top-card-layout__title")[0];
-				}*/
 				if (header)data.header = header.innerText;
 
 				let title = profiles_sections.getElementsByClassName("text-body-medium")[0];
@@ -37,55 +30,20 @@
 
 				let contact = profiles_sections.getElementsByClassName("text-body-small inline")[0];
 				if (contact)data.contact = contact.innerText;
-
-				section_index++;
-			}
-
-			let guidances = document.getElementById('guidance');
-			if (guidances != null && sections.length > section_index) {
-				section_index++;
-			}
-
-			let insights = document.getElementById('insights');
-			if (insights != null && sections.length > section_index) {
-				section_index++;
-			}
-
-			let resources = document.getElementById('resources');
-			if (resources != null && sections.length > section_index) {
-				section_index++;
-			}
-
-			let highlights = document.getElementById('highlights');
-			if (highlights != null && sections.length > section_index) {
-				section_index++;
 			}
 
 			let abouts = document.getElementById('about');
-			let about_null = document.getElementById('about_null_state');
-			if (about_null == null && abouts != null && sections.length > section_index) {
-				let abouts_sections = sections[section_index];
+			if (abouts != null && abouts.parentElement.nodeName == "SECTION") {
+				let abouts_sections = abouts.parentElement;
 				let about = abouts_sections.querySelectorAll('[aria-hidden="true"]');
 				if (about.length > 1) {
 					data.summary = about[1].innerText;
 				}
-				section_index++;
-			}
-
-			let services = document.getElementById('services');
-			if (services != null && sections.length > section_index) {
-				section_index++;
-			}
-
-			let contents = document.getElementById('content_collections');
-			if (contents != null && sections.length > section_index) {
-				section_index++;
 			}
 
 			let experiences = document.getElementById('experience');
-			let experience_null = document.getElementById('experience_null_state');
-			if (experience_null == null && experiences != null && sections.length > section_index) {
-				const experiences_sections = sections[section_index];
+			if (experiences != null && experiences.parentElement.nodeName == "SECTION") {
+				const experiences_sections = experiences.parentElement;
 				const experience_list = experiences_sections.getElementsByTagName("ul")[0];
 				let items = [];
 				if (experience_list) {
@@ -232,12 +190,10 @@
 					index++;
 				}
 			}
-			section_index++;
 
 			let educations = document.getElementById('education');
-			let education_null = document.getElementById('education_null_state');
-			if (education_null == null && educations != null && sections.length > section_index) {
-				let educations_sections = sections[section_index];
+			if (educations != null && educations.parentElement.nodeName == "SECTION") {
+				let educations_sections = educations.parentElement;
 				let education = educations_sections.querySelectorAll('[aria-hidden="true"]');
 				if (education && education.length > 2) {
 					data.education[0].school = education[2].innerText;
@@ -249,17 +205,10 @@
 					data.education[0].years = education[4].innerText;
 				}
 			}
-			section_index++;
-
-			let licenses_and_certifications = document.getElementById('licenses_and_certifications');
-			if (licenses_and_certifications != null && sections.length > section_index) {
-				section_index++;
-			}
 
 			let skills = document.getElementById('skills');
-			let skill_null = document.getElementById('skills_null_state');
-			if (skill_null == null && skills != null && sections.length > section_index) {
-				let skills_sections = sections[section_index];
+			if (skills != null && skills.parentElement.nodeName == "SECTION") {
+				let skills_sections = skills.parentElement;
 				let skill = skills_sections.querySelectorAll('[aria-hidden="true"]');
 				for (let j = 0; j < skill.length; j++) {
 					if (skill[j].nodeName == "DIV" && skill.length > j+1 && skill[j+1].nodeName == "SPAN") {
@@ -267,16 +216,10 @@
 					}
 				}
 			}
-			section_index++;
-
-			let courses = document.getElementById('courses');
-			if (courses != null && sections.length > section_index) {
-				section_index++;
-			}
 
 			let languages = document.getElementById('languages');
-			if (languages != null && sections.length > section_index) {
-				let languages_sections = sections[section_index];
+			if (languages != null && languages.parentElement.nodeName == "SECTION") {
+				let languages_sections = languages.parentElement;
 				let language = languages_sections.querySelectorAll('[aria-hidden="true"]');
 				if (language && language.length > 2) {
 					data.languages.push(language[2].innerText);
@@ -284,7 +227,6 @@
 				if (language && language.length > 4) {
 					data.languages.push(language[4].innerText);
 				}
-				section_index++;
 			}
 
 			chrome.runtime.sendMessage({
